@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
+class ConditionsPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         # owner of the document will be able to View, Edit, and Delete the document
@@ -9,17 +9,18 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # other user will be able to create his/her own document.
         edit_request = request.method == 'PUT'
         view_request = request.method == 'GET'
+        delete_request = request.method == 'DELETE'
 
-        view_or_edit_request = view_request or edit_request
+        view_edit_or_delete_request = view_request or edit_request or delete_request
 
         # if request.method in permissions.SAFE_METHODS:
         #     return True
 
         is_document_owner = obj.owner == request.user
         is_in_shared_list = request.user in obj.shared_with.all()
-
+        is_owner_editing = obj.owner == request.user and request.user in obj.current_editors.all()
         if is_document_owner:
             return True
-        if is_in_shared_list and view_or_edit_request:
+        if is_in_shared_list and view_edit_or_delete_request and is_owner_editing:
             return True
         return False
