@@ -8,6 +8,8 @@ A simple document management REST based API for collaboratively interacting with
 + [Django Rest Framework](https://www.django-rest-framework.org/)
 + [SQLite](https://www.sqlite.org/index.html)
 
+> ℹ️: **For Demo and Test Purposes**: Please use .txt file uploads. Once interacted with, these files are appended with action log text lines.
+
 ### Steps to run the application on your local machine
 ```bash
 virtualenv <name_python_env> -p python3.10
