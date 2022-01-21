@@ -9,6 +9,9 @@ from .models import Document
 class DocumentSerializer(serializers.HyperlinkedModelSerializer):
     owner_id = serializers.CharField(source="owner.id", read_only=True)
     owner = serializers.PrimaryKeyRelatedField(source="owner.username", read_only=True)
+    
+    def __init__(self, *args, **kwargs):
+        return super(DocumentSerializer, self).__init__(*args, **kwargs)
 
     class Meta:
         model = Document
@@ -26,9 +29,6 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
                 ins.current_editors.remove(current_user)
         if action in ['update', 'partial_update', 'retrieve']:
             if self.instance:
-                if self.instance.owner == current_user:
-                    # the owner is editing right now
-                    pass
                 self.instance.current_editors.add(self.context.get('request').user)
             doc_file_kwargs = extra_kwargs.get('doc_file', {})
             shared_with_kwargs = extra_kwargs.get('shared_with', {})

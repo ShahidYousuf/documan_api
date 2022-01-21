@@ -13,15 +13,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, ConditionsPermission]
 
     def retrieve(self, request, *args, **kwargs):
-        print(self.settings.__dict__)
         return super(DocumentViewSet, self).retrieve(request, *args, **kwargs)
 
-
-
-
-
-
-    # def get_queryset(self):
-    #     documents = [self.request.user.documents, self.request.user.shared_documents]
-    #     return documents
 

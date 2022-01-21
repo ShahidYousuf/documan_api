@@ -12,6 +12,7 @@ class ConditionsPermission(permissions.BasePermission):
         delete_request = request.method == 'DELETE'
 
         view_edit_or_delete_request = view_request or edit_request or delete_request
+        view_or_edit_request = view_request or edit_request
 
         # if request.method in permissions.SAFE_METHODS:
         #     return True
@@ -21,6 +22,10 @@ class ConditionsPermission(permissions.BasePermission):
         is_owner_editing = obj.owner == request.user and request.user in obj.current_editors.all()
         if is_document_owner:
             return True
+        if is_in_shared_list and request.method == 'DELETE':
+            return False
         if is_in_shared_list and view_edit_or_delete_request and is_owner_editing:
+            return True
+        if is_in_shared_list and view_or_edit_request:
             return True
         return False
